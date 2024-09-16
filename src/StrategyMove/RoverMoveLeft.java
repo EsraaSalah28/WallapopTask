@@ -1,14 +1,17 @@
 package StrategyMove;
 
 import Enums.Directions;
+import Models.MapSpace;
 import Models.Rover;
+import utils.RoverHelper;
 
 
-public class RoverMoveLeft implements RoverMove{
-    private Rover rover;
+public class RoverMoveLeft implements RoverMove {
+    private final Rover rover;
 
     public RoverMoveLeft(Rover rover) {
         this.rover = rover;
+
     }
 
     @Override

@@ -6,6 +6,7 @@ import StrategyMove.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import utils.RoverHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,14 +17,16 @@ import java.util.Map;
 public class Rover {
     private RoverPosition roverPosition;
     private Directions direction;
-    private Map<Instructions, RoverMove> moveStrategies= new HashMap<>();
+    private Map<Instructions, RoverMove> moveStrategies = new HashMap<>();
     private MapSpace mapSpace;
+    private RoverHelper roverHelper;
 
-    public Rover(RoverPosition roverPosition, Directions direction, Map<Instructions, RoverMove> moveStrategies, MapSpace mapSpace) {
+    public Rover(RoverPosition roverPosition, Directions direction, Map<Instructions, RoverMove> moveStrategies, MapSpace mapSpace,RoverHelper roverHelper) {
         this.roverPosition = roverPosition;
         this.direction = direction;
         this.moveStrategies = moveStrategies;
         this.mapSpace = mapSpace;
+        this.roverHelper = roverHelper;
     }
 
     public Rover(RoverPosition roverPosition, Directions direction, MapSpace mapSpace) {
@@ -33,8 +36,8 @@ public class Rover {
 
         // Initialize moveStrategies internally
         this.moveStrategies = new HashMap<>();
-        this.moveStrategies.put(Instructions.FORWARD, new RoverMoveForward(this));
-        this.moveStrategies.put(Instructions.BACKWARD, new RoverMoveBackward(this));
+        this.moveStrategies.put(Instructions.FORWARD, new RoverMoveForward(this,roverHelper,mapSpace));
+        this.moveStrategies.put(Instructions.BACKWARD, new RoverMoveBackward(this,roverHelper,mapSpace));
         this.moveStrategies.put(Instructions.LEFT, new RoverMoveLeft(this));
         this.moveStrategies.put(Instructions.RIGHT, new RoverMoveRight(this));
     }
@@ -46,7 +49,6 @@ public class Rover {
                 .mapSpace(new MapSpace(map.getDiagonalX(), map.getDiagonalY()))
                 .build();
     }
-
 
 
     public boolean hasPosition(RoverPosition roverPos) {
@@ -72,21 +74,14 @@ public class Rover {
     }
 
 
-
-
     public void doInstructions(Instructions instruction) {
-       if(moveStrategies==null)
-           throw  new RuntimeException();
+        if (moveStrategies == null)
+            throw new RuntimeException();
         RoverMove strategy = moveStrategies.get(instruction);
         strategy.move();
 
 
     }
-
-
-
-
-
 
 
 }

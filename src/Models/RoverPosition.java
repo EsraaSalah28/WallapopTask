@@ -11,8 +11,8 @@ public class RoverPosition {
 
 
     public RoverPosition(int roverX, int roverY) {
-      this.roverX = roverX;
-      this.roverY = roverY;
+        this.roverX = roverX;
+        this.roverY = roverY;
     }
 
     @Override
@@ -29,13 +29,10 @@ public class RoverPosition {
     }
 
 
-    public boolean isOnMap(MapSpace mapSpace)
-    {
-        if(roverX <0 || roverX> mapSpace.getDiagonalX())
+    public boolean isOnMap(MapSpace mapSpace) {
+        if (roverX < 0 || roverX > mapSpace.getDiagonalX())
             return false;
-        if(roverY <0 || roverY> mapSpace.getDiagonalY())
-            return false;
-        return true;
+        return roverY >= 0 && roverY <= mapSpace.getDiagonalY();
     }
 
 
