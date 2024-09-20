@@ -1,12 +1,13 @@
-package Models;
+package main.models;
 
-import Enums.Directions;
-import Enums.Instructions;
-import StrategyMove.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import utils.RoverHelper;
+import main.enums.Directions;
+import main.enums.Instructions;
+import main.exceptions.RoverPositionException;
+import main.movestrategy.*;
+import main.utils.RoverHelper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,11 +18,11 @@ import java.util.Map;
 public class Rover {
     private RoverPosition roverPosition;
     private Directions direction;
-    private Map<Instructions, RoverMove> moveStrategies = new HashMap<>();
+    private Map<Instructions, RoverMove> moveStrategies ;
     private MapSpace mapSpace;
     private RoverHelper roverHelper;
 
-    public Rover(RoverPosition roverPosition, Directions direction, Map<Instructions, RoverMove> moveStrategies, MapSpace mapSpace,RoverHelper roverHelper) {
+    public Rover(RoverPosition roverPosition, Directions direction, Map<Instructions, RoverMove> moveStrategies, MapSpace mapSpace, RoverHelper roverHelper) {
         this.roverPosition = roverPosition;
         this.direction = direction;
         this.moveStrategies = moveStrategies;
@@ -30,16 +31,12 @@ public class Rover {
     }
 
     public Rover(RoverPosition roverPosition, Directions direction, MapSpace mapSpace) {
-        this.roverPosition = roverPosition;
-        this.direction = direction;
-        this.mapSpace = mapSpace;
-
-        // Initialize moveStrategies internally
-        this.moveStrategies = new HashMap<>();
-        this.moveStrategies.put(Instructions.FORWARD, new RoverMoveForward(this,roverHelper,mapSpace));
-        this.moveStrategies.put(Instructions.BACKWARD, new RoverMoveBackward(this,roverHelper,mapSpace));
-        this.moveStrategies.put(Instructions.LEFT, new RoverMoveLeft(this));
-        this.moveStrategies.put(Instructions.RIGHT, new RoverMoveRight(this));
+        this(roverPosition, direction, new HashMap<>(), mapSpace, new RoverHelper()); // Chaining the main constructor
+        // Initialize moveStrategies
+        this.moveStrategies.put(Instructions.FORWARD, new RoverMoveForward(this, roverHelper, mapSpace));
+        this.moveStrategies.put(Instructions.BACKWARD, new RoverMoveBackward(this, roverHelper, mapSpace));
+        this.moveStrategies.put(Instructions.LEFT, new RoverMoveLeft(this, mapSpace));
+        this.moveStrategies.put(Instructions.RIGHT, new RoverMoveRight(this, mapSpace));
     }
 
     private Rover createRover(MapSpace map, RoverPosition roverPosition, Directions direction) {
@@ -52,7 +49,7 @@ public class Rover {
 
 
     public boolean hasPosition(RoverPosition roverPos) {
-        return roverPosition.equals(roverPos);
+        return roverPosition.isEqualsTo(roverPos);
     }
 
     public Rover locateRover(MapSpace map, RoverPosition roverPosition, Directions direction) {
@@ -60,16 +57,15 @@ public class Rover {
         return createRover(map, roverPosition, direction);
     }
 
-    // Extract validation logic to a separate method
     private void validateRoverPosition(MapSpace map, RoverPosition roverPosition) {
         if (roverPosition == null) {
-            throw new IllegalArgumentException("Rover position cannot be null");
+            throw new RoverPositionException("Rover position cannot be null");
         }
         if (!roverPosition.isOnMap(map)) {
-            throw new IllegalArgumentException("Rover position is not on map");
+            throw new RoverPositionException("Rover position is not on map");
         }
         if (map.isOccupied(roverPosition)) {
-            throw new IllegalArgumentException("Rover position is not occupied");
+            throw new RoverPositionException("Rover position is not occupied");
         }
     }
 
@@ -79,9 +75,6 @@ public class Rover {
             throw new RuntimeException();
         RoverMove strategy = moveStrategies.get(instruction);
         strategy.move();
-
-
     }
-
 
 }

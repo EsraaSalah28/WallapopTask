@@ -1,11 +1,13 @@
-package StrategyMove;
+package main.movestrategy;
 
 
-import Enums.Directions;
-import Models.MapSpace;
-import Models.Rover;
-import Models.RoverPosition;
-import utils.RoverHelper;
+import main.enums.Directions;
+
+import main.exceptions.RoverPositionException;
+import main.models.MapSpace;
+import main.models.Rover;
+import main.models.RoverPosition;
+import main.utils.RoverHelper;
 
 public class RoverMoveForward implements RoverMove {
    private final Rover rover;
@@ -20,23 +22,30 @@ public class RoverMoveForward implements RoverMove {
 
     @Override
     public void move() {
+        RoverPosition newPosition = getRoverPosition();
+        roverHelper.validatePosition(newPosition,mapSpace);
+        if (mapSpace.isOccupied(newPosition)) {
+            System.out.println("Encountered an obstacle at position: " + newPosition.getRoverX() + ", " + newPosition.getRoverY());
+            return;
+        }
+        if (!newPosition.isOnMap(rover.getMapSpace())) {
+            throw new RoverPositionException("Rover is out of bounds!");
+        }
+
+        rover.setRoverPosition(newPosition);
+    }
+
+    private RoverPosition getRoverPosition() {
         RoverPosition currentPosition = rover.getRoverPosition();
         Directions direction = rover.getDirection();
         int roverY = currentPosition.getRoverY();
         int roverX = currentPosition.getRoverX();
 
-        RoverPosition newPosition = switch (direction) {
+        return switch (direction) {
             case NORTH -> new RoverPosition(roverX, roverY + 1);
             case SOUTH -> new RoverPosition(roverX, roverY - 1);
             case EAST -> new RoverPosition(roverX + 1, roverY);
             case WEST -> new RoverPosition(roverX - 1, roverY);
         };
-        roverHelper.validatePosition(newPosition,mapSpace);
-
-        if (!newPosition.isOnMap(rover.getMapSpace())) {
-            throw new RuntimeException("Rover is out of bounds!");
-        }
-
-        rover.setRoverPosition(newPosition);
     }
 }

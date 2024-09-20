@@ -1,4 +1,4 @@
-package Models;
+package main.models;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,8 +23,7 @@ public class RoverPosition {
                 '}';
     }
 
-    public boolean equals(RoverPosition position) {
-
+    public boolean isEqualsTo(RoverPosition position) {
         return roverX == position.roverX && roverY == position.roverY;
     }
 

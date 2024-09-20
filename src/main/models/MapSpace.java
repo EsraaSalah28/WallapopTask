@@ -1,4 +1,4 @@
-package Models;
+package main.models;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -25,12 +25,7 @@ public class MapSpace {
     }
 
     public boolean isOccupied(RoverPosition roverPosition) {
-        for (Rover rover : roverList) {
-            if (rover.hasPosition(roverPosition))
-                return true;
-        }
-        return false;
+        return roverList.stream().anyMatch(r -> r.hasPosition(roverPosition));
     }
-
 
 }

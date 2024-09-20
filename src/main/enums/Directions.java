@@ -1,4 +1,7 @@
-package Enums;
+package main.enums;
+
+
+import main.exceptions.InvalidDirectionException;
 
 public enum Directions {
     NORTH('n'),
@@ -20,8 +23,8 @@ public enum Directions {
     }
 
     public static Directions fromString(String directionStr) {
-        if (directionStr == null || directionStr.length() != 1) {
-            throw new IllegalArgumentException("Invalid input: " + directionStr);
+        if (directionStr == null|| directionStr.length() != 1) {
+            throw new InvalidDirectionException("Invalid input: " + directionStr);
         }
 
         char directionChar = Character.toLowerCase(directionStr.charAt(0));
@@ -33,5 +36,6 @@ public enum Directions {
         }
 
         // Throw an exception if the input does not match any enum values
-        throw new IllegalArgumentException("Invalid direction: " + directionStr);
-    }}
+        throw new InvalidDirectionException("Invalid direction: " + directionStr);
+    }
+}
