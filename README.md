@@ -10,6 +10,11 @@ We need to improve the existing solution that translates commands sent from Eart
 
 Currently, the code is very complicated and tangled, so we'd like you to invest some time to clean it up
 
+[Go to How to run the JAR](#how-to-run-the-jar)
+
+[How to run the Dockerfile](#how-to-run-the-dockerfile)
+
+
 ### Functional requirements
 ```
 Given:
@@ -77,3 +82,16 @@ We would like you to maintain this new repository as private, and give access to
 Please, let us know as soon as you finish, otherwise we will not start the review
 
 Thanks & good luck!!
+## How to run the JAR
+```
+java -jar WallapopTask.jar
+
+```
+
+## How to run the Dockerfile
+```
+  -docker build -t wallapoptask-app .
+  
+  -docker run -it wallapoptask-app
+
+```
