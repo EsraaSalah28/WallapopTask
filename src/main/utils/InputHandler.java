@@ -43,7 +43,7 @@ public class InputHandler {
         System.out.printf("Rover is at x: %d, y: %d, facing: %s%n", position.getRoverX(), position.getRoverY(), direction);
     }
     private boolean shouldContinue() {
-        System.out.println("Do you want to continue? Insert 'y' for Yes:");
+        System.out.println("Do you want to continue? Insert 'y' for Yes if no enter any key:");
         String answer = scanner.next();
         return answer.equalsIgnoreCase("y");
     }
